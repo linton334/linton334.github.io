@@ -109,20 +109,19 @@ def GetStoryView(request):
         stories = News.objects.filter(**filters)
         serialized_filtered_stories = json.loads(serialize('json', stories))
 
-        if not stories:
+        if not serialized_filtered_stories:
             return HttpResponse('No stories found', status=404)
-
+        
         stories_list = []
         for story in serialized_filtered_stories:
-            single_story = {}
             story_dict = {
-                single_story['key']: story["fields"]["id"],
-                single_story['headline']: story["fields"]["title"],
-                single_story['story_cat']: story["fields"]["category"],
-                single_story['story_region']: story["fields"]["region"],
-                single_story['author']: story["fields"]["author"],
-                single_story['story_date']: story["fields"]["date"],
-                single_story['story_details']: story["fields"]["details"],
+                'key': story["fields"]["id"],
+                'headline': story["fields"]["title"],
+                'story_cat': story["fields"]["category"],
+                'story_region': story["fields"]["region"],
+                'author': story["fields"]["author"],
+                'story_date': story["fields"]["date"],
+                'story_details': story["fields"]["details"],
             }
             stories_list.append(story_dict)
 
