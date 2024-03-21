@@ -64,9 +64,17 @@ def PostStoryView(request):
         data = json.loads(request.body)
 
         title = data.get('headline')
+        if len(title) > 64:
+            return HttpResponse('Error: Headline is too long. It should be up to 64 characters.', status=400, content_type='text/plain')
         category_short = data.get('category')
+        if category_short not in ['pol', 'art', 'tech', 'trivia']:
+            return HttpResponse("Error: Invalid category. It should be one of the following: 'pol', 'art', 'tech', 'trivia'.", status=400, content_type='text/plain')
         region_short = data.get('region')
+        if region_short not in ['uk', 'eu', 'w']:
+            return HttpResponse("Error: Invalid region. It should be one of the following: 'uk', 'eu', 'w'.", status=400, content_type='text/plain')
         details = data.get('details')
+        if len(details) > 128:
+            return HttpResponse('Error: Details are too long. They should be up to 128 characters.', status=400, content_type='text/plain')
 
         try:
             category = Category.objects.get(short=category_short)

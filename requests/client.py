@@ -35,9 +35,21 @@ class NewsClient:
 
     def post(self):
         headline = input("Enter headline: ")
+        if len(headline) > 64:
+            print("Error: Headline is too long. It should be up to 64 characters.")
+            return
         category = input("Enter category: ")
+        if category not in ['pol', 'art', 'tech', 'trivia']:
+            print("Error: Invalid category. It should be one of the following: 'pol', 'art', 'tech', 'trivia'.")
+            return
         region = input("Enter region: ")
+        if region not in ['uk', 'eu', 'w']:
+            print("Error: Invalid region. It should be one of the following: 'uk', 'eu', 'w'.")
+            return
         details = input("Enter details: ")
+        if len(details) > 128:
+            print("Error: Details are too long. They should be up to 128 characters.")
+            return
         print("-------------------------")
         try:
             response = self.session.post(f"{self.base_url}/api/stories", json={"headline": headline, "category": category, "region": region, "details": details})
