@@ -114,9 +114,9 @@ def GetStoryView(request):
         for story in stories:
             story_dict = {
                 'key': story.id,
-                'headline': story.headline,
-                'story_cat': story.category__name,
-                'story_region': story.region__name,
+                'headline': story.title,
+                'story_cat': story.category,
+                'story_region': story.region,
                 'author': story.author,
                 'story_date': story.date.strftime('%d/%m/%Y'),
                 'story_details': story.details,
