@@ -89,10 +89,10 @@ def PostStoryView(request):
 @csrf_exempt
 def GetStoryView(request):
     if request.method == 'GET':
-        service_id = request.GET.get('id', '*')
-        cat = request.GET.get('cat', '*')
-        reg = request.GET.get('reg', '*')
-        date = request.GET.get('date', '*')
+        service_id = request.GET.get('key', '*')
+        cat = request.GET.get('story_cat', '*')
+        reg = request.GET.get('story_region', '*')
+        date = request.GET.get('story_date', '*')
 
         filters = {}
         if service_id != '*':
@@ -102,8 +102,11 @@ def GetStoryView(request):
         if reg != '*':
             filters['region__name'] = reg
         if date != '*':
-            date = datetime.strptime(date, '%d/%m/%Y').strftime('%Y-%m-%d')
-            filters['date__gte'] = date
+            try:
+                date = datetime.strptime(date, '%d/%m/%Y').date()
+                filters['date'] = date
+            except ValueError:
+                return HttpResponse('Invalid date format. Expected DD/MM/YYYY.', status=400)
 
         stories = News.objects.filter(**filters)
 
@@ -112,9 +115,8 @@ def GetStoryView(request):
 
         stories_list = list(stories.values('key', 'headline', 'story_cat', 'story_region', 'author', 'story_date', 'story_details'))
         return JsonResponse({'stories': stories_list}, status=200)
-
     else:
-        return HttpResponse('Invalid request', status=400)
+        return HttpResponse('Invalid request', status=400, content_type='text/plain')
     
 @csrf_exempt
 def DeleteStoryView(request, key):
