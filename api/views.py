@@ -114,12 +114,15 @@ def GetStoryView(request):
         
         stories_list = []
         for story in serialized_filtered_stories:
+            author = Author.objects.filter(pk=story["fields"]["author"])
+            region = Region.objects.filter(pk=story["fields"]["region"])
+            category = Category.objects.filter(pk=story["fields"]["category"])
             story_dict = {
                 'key': story["pk"],
                 'headline': story["fields"]["title"],
-                'story_cat': story["fields"]["category"],
-                'story_region': story["fields"]["region"],
-                'author': story["fields"]["author"],
+                'story_cat': category[0].name,
+                'story_region': region[0].name,
+                'author': author[0].firstName + ' ' + author[0].lastName,
                 'story_date': story["fields"]["date"],
                 'story_details': story["fields"]["details"],
             }
