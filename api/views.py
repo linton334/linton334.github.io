@@ -115,7 +115,7 @@ def GetStoryView(request):
         stories_list = []
         for story in serialized_filtered_stories:
             story_dict = {
-                'key': story["fields"]["id"],
+                'key': story["fields"]["pk"],
                 'headline': story["fields"]["title"],
                 'story_cat': story["fields"]["category"],
                 'story_region': story["fields"]["region"],
