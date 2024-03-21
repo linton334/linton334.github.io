@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 import json
 from datetime import datetime
+from django.core.serializers import serialize
 
 logger = logging.getLogger(__name__)
 
@@ -106,20 +107,22 @@ def GetStoryView(request):
                 return HttpResponse('Invalid date format. Expected DD/MM/YYYY.', status=400)
 
         stories = News.objects.filter(**filters)
+        serialized_filtered_stories = json.loads(serialize('json', stories))
 
         if not stories:
             return HttpResponse('No stories found', status=404)
 
         stories_list = []
-        for story in stories:
+        for story in serialized_filtered_stories:
+            single_story = {}
             story_dict = {
-                'key': story["fields"]["id"],
-                'headline': story["fields"]["title"],
-                'story_cat': story["fields"]["category"],
-                'story_region': story["fields"]["region"],
-                'author': story["fields"]["author"],
-                'story_date': story["fields"]["date"],
-                'story_details': story["fields"]["details"],
+                single_story['key']: story["fields"]["id"],
+                single_story['headline']: story["fields"]["title"],
+                single_story['story_cat']: story["fields"]["category"],
+                single_story['story_region']: story["fields"]["region"],
+                single_story['author']: story["fields"]["author"],
+                single_story['story_date']: story["fields"]["date"],
+                single_story['story_details']: story["fields"]["details"],
             }
             stories_list.append(story_dict)
 
