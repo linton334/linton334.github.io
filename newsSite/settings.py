@@ -133,3 +133,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
