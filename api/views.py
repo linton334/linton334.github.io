@@ -110,7 +110,7 @@ def GetStoryView(request):
         if not stories:
             return HttpResponse('No stories found', status=404)
 
-        stories_list = list(stories.values('id', 'title', 'category__name', 'region__name', 'author__username', 'date', 'details'))
+        stories_list = list(stories.values('key', 'headline', 'story_cat', 'story_region', 'auhor', 'story_date', 'story_details'))
         return JsonResponse({'stories': stories_list}, status=200)
 
     else:
