@@ -113,17 +113,17 @@ def GetStoryView(request):
         stories_list = []
         for story in stories:
             story_dict = {
-                'key': story.id,
-                'headline': story.title,
-                'story_cat': story.category.name,
-                'story_region': story.region.name,
-                'author': story.author,
-                'story_date': story.date.strftime('%d/%m/%Y'),
-                'story_details': story.details,
+                'key': story["fields"]["id"],
+                'headline': story["fields"]["title"],
+                'story_cat': story["fields"]["category"],
+                'story_region': story["fields"]["region"],
+                'author': story["fields"]["author"],
+                'story_date': story["fields"]["date"],
+                'story_details': story["fields"]["details"],
             }
             stories_list.append(story_dict)
 
-        return JsonResponse({'stories': stories_list}, status=200)
+        return HttpResponse(json.dumps({'stories': stories_list}), content_type='application/json', status=200)
     else:
         return HttpResponse('Invalid request', status=400, content_type='text/plain')
     
