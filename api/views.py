@@ -89,14 +89,11 @@ def PostStoryView(request):
 @csrf_exempt
 def GetStoryView(request):
     if request.method == 'GET':
-        service_id = request.GET.get('key', '*')
         cat = request.GET.get('story_cat', '*')
         reg = request.GET.get('story_region', '*')
         date = request.GET.get('story_date', '*')
 
         filters = {}
-        if service_id != '*':
-            filters['service_id'] = service_id
         if cat != '*':
             filters['category__name'] = cat
         if reg != '*':
@@ -113,7 +110,19 @@ def GetStoryView(request):
         if not stories:
             return HttpResponse('No stories found', status=404)
 
-        stories_list = list(stories.values('key', 'headline', 'story_cat', 'story_region', 'author', 'story_date', 'story_details'))
+        stories_list = []
+        for story in stories:
+            story_dict = {
+                'key': story.key,
+                'headline': story.headline,
+                'story_cat': story.category__name,
+                'story_region': story.region__name,
+                'author': story.author,
+                'story_date': story.date.strftime('%d/%m/%Y'),
+                'story_details': story.details,
+            }
+            stories_list.append(story_dict)
+
         return JsonResponse({'stories': stories_list}, status=200)
     else:
         return HttpResponse('Invalid request', status=400, content_type='text/plain')
